@@ -13,6 +13,7 @@ import com.alexsaraiva.cursomc.domain.Cidade;
 import com.alexsaraiva.cursomc.domain.Cliente;
 import com.alexsaraiva.cursomc.domain.Endereco;
 import com.alexsaraiva.cursomc.domain.Estado;
+import com.alexsaraiva.cursomc.domain.ItemPedido;
 import com.alexsaraiva.cursomc.domain.Pagamento;
 import com.alexsaraiva.cursomc.domain.PagamentoComBoleto;
 import com.alexsaraiva.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.alexsaraiva.cursomc.repositories.CidadeRepository;
 import com.alexsaraiva.cursomc.repositories.ClienteRepository;
 import com.alexsaraiva.cursomc.repositories.EnderecoRepository;
 import com.alexsaraiva.cursomc.repositories.EstadoRepository;
+import com.alexsaraiva.cursomc.repositories.ItemPedidoRepository;
 import com.alexsaraiva.cursomc.repositories.PagamentoRepository;
 import com.alexsaraiva.cursomc.repositories.PedidoRepository;
 import com.alexsaraiva.cursomc.repositories.ProdutoRepository;
@@ -33,28 +35,31 @@ import com.alexsaraiva.cursomc.repositories.ProdutoRepository;
 public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
-	 CategoriaRepository categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	
 	@Autowired
-	 ProdutoRepository produtoRepository;
+	private ProdutoRepository produtoRepository;
 	
 	@Autowired
-	 EstadoRepository estadoRepository;
+	private EstadoRepository estadoRepository;
 	
 	@Autowired
-	 CidadeRepository cidadeRepository;
+	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	 ClienteRepository clienteRepository;
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
-	 EnderecoRepository enderecoRepository;
+	private EnderecoRepository enderecoRepository;
 	
 	@Autowired
-	 PedidoRepository pedidoRepository;
+	private PedidoRepository pedidoRepository;
 	
 	@Autowired
-	 PagamentoRepository pagamentoRepository;
+	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -104,20 +109,33 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	
-	Pedido pd1 = new Pedido(null, sdf.parse("30/12/2019 10:50"), cli1, e1);
-	Pedido pd2 = new Pedido(null, sdf.parse("22/02/2019 10:50"), cli1, e1);
+	Pedido ped1 = new Pedido(null, sdf.parse("30/12/2019 10:50"), cli1, e1);
+	Pedido ped2 = new Pedido(null, sdf.parse("22/02/2019 10:50"), cli1, e1);
 	
-	Pagamento pgmt1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, pd1, 6);
-	pd1.setPagamento(pgmt1);
+	Pagamento pgmt1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+	ped1.setPagamento(pgmt1);
 	
-	Pagamento pgmt2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, pd2,null,sdf.parse("30/12/2019 00:00"));
-	pd2.setPagamento(pgmt2 );
+	Pagamento pgmt2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2,null,sdf.parse("30/12/2019 00:00"));
+	ped2.setPagamento(pgmt2 );
 	
-	cli1.getPedidos().addAll(Arrays.asList(pd1, pd2));
+	cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
 	
-	pedidoRepository.saveAll(Arrays.asList(pd1, pd2));
+	pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 	pagamentoRepository.saveAll(Arrays.asList(pgmt1, pgmt2));
 	
+	
+	ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+	ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+	ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+	
+	ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+	ped1.getItens().addAll(Arrays.asList(ip3));
+	
+	p1.getItens().addAll(Arrays.asList(ip1));
+	p2.getItens().addAll(Arrays.asList(ip3));
+	p3.getItens().addAll(Arrays.asList(ip2));
+	
+	itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 	}
 
 }
