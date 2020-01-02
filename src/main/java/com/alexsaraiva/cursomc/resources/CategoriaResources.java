@@ -6,6 +6,7 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,16 +25,18 @@ public class CategoriaResources {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> listar(@PathVariable Integer id) {
-		
 		Categoria categoria = categoriaService.buscar(id);
 		return ResponseEntity.ok().body(categoria);
 	}
 	
-	public ResponseEntity<Void> inset(Categoria obj){
-		obj = categoriaService.insert(obj);
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@RequestBody Categoria obj){
+		Categoria objResponse = categoriaService.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getId()).toUri();
-		
+				.path("/{id}").buildAndExpand(objResponse.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	
 }
