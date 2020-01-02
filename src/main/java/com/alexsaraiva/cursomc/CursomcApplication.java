@@ -1,5 +1,6 @@
 package com.alexsaraiva.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,35 +13,48 @@ import com.alexsaraiva.cursomc.domain.Cidade;
 import com.alexsaraiva.cursomc.domain.Cliente;
 import com.alexsaraiva.cursomc.domain.Endereco;
 import com.alexsaraiva.cursomc.domain.Estado;
+import com.alexsaraiva.cursomc.domain.Pagamento;
+import com.alexsaraiva.cursomc.domain.PagamentoComBoleto;
+import com.alexsaraiva.cursomc.domain.PagamentoComCartao;
+import com.alexsaraiva.cursomc.domain.Pedido;
 import com.alexsaraiva.cursomc.domain.Produto;
+import com.alexsaraiva.cursomc.domain.enums.EstadoPagamento;
 import com.alexsaraiva.cursomc.domain.enums.TipoCliente;
 import com.alexsaraiva.cursomc.repositories.CategoriaRepository;
 import com.alexsaraiva.cursomc.repositories.CidadeRepository;
 import com.alexsaraiva.cursomc.repositories.ClienteRepository;
 import com.alexsaraiva.cursomc.repositories.EnderecoRepository;
 import com.alexsaraiva.cursomc.repositories.EstadoRepository;
+import com.alexsaraiva.cursomc.repositories.PagamentoRepository;
+import com.alexsaraiva.cursomc.repositories.PedidoRepository;
 import com.alexsaraiva.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	 CategoriaRepository categoriaRepository;
 	
 	@Autowired
-	private ProdutoRepository produtoRepository;
+	 ProdutoRepository produtoRepository;
 	
 	@Autowired
-	EstadoRepository estadoRepository;
+	 EstadoRepository estadoRepository;
 	
 	@Autowired
-	CidadeRepository cidadeRepository;
+	 CidadeRepository cidadeRepository;
 	
 	@Autowired
-	ClienteRepository clienteRepository;
+	 ClienteRepository clienteRepository;
 	
 	@Autowired
-	EnderecoRepository enderecoRepository;
+	 EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	 PedidoRepository pedidoRepository;
+	
+	@Autowired
+	 PagamentoRepository pagamentoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -87,6 +101,22 @@ public class CursomcApplication implements CommandLineRunner {
 		
 	clienteRepository.saveAll(Arrays.asList(cli1));
 	enderecoRepository.saveAll(Arrays.asList(e1,e2));
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	
+	Pedido pd1 = new Pedido(null, sdf.parse("30/12/2019 10:50"), cli1, e1);
+	Pedido pd2 = new Pedido(null, sdf.parse("22/02/2019 10:50"), cli1, e1);
+	
+	Pagamento pgmt1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, pd1, 6);
+	pd1.setPagamento(pgmt1);
+	
+	Pagamento pgmt2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, pd2,null,sdf.parse("30/12/2019 00:00"));
+	pd2.setPagamento(pgmt2 );
+	
+	cli1.getPedidos().addAll(Arrays.asList(pd1, pd2));
+	
+	pedidoRepository.saveAll(Arrays.asList(pd1, pd2));
+	pagamentoRepository.saveAll(Arrays.asList(pgmt1, pgmt2));
 	
 	}
 
