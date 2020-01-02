@@ -22,7 +22,7 @@ public class PedidoResources {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> listar(@PathVariable Integer id) {
 		
-		Pedido categoria = categoriaService.buscar(id);
+		Pedido categoria = categoriaService.find(id);
 		return ResponseEntity.ok().body(categoria);
 	}
 }
