@@ -1,6 +1,7 @@
 package com.alexsaraiva.cursomc.resources;
 
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alexsaraiva.cursomc.domain.Cliente;
 import com.alexsaraiva.cursomc.dto.ClienteDTO;
+import com.alexsaraiva.cursomc.dto.ClienteNewDTO;
 import com.alexsaraiva.cursomc.services.ClienteService;
 
 @RestController
@@ -33,6 +36,15 @@ public class ClienteResources {
 		
 		Cliente categoria = clienteService.find(id);
 		return ResponseEntity.ok().body(categoria);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDTO){
+		Cliente obj = clienteService.fromDTO(objDTO);
+		Cliente objResponse = clienteService.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(objResponse.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@RequestMapping(value = "/{id}", method =RequestMethod.PUT)
