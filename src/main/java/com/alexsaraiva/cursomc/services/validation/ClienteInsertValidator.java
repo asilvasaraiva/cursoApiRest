@@ -15,7 +15,7 @@ import com.alexsaraiva.cursomc.repositories.ClienteRepository;
 import com.alexsaraiva.cursomc.resources.exception.FieldMessage;
 import com.alexsaraiva.cursomc.services.validation.utils.BR_validaCPFeCNPJ;
 
-public class ClientInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
+public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;

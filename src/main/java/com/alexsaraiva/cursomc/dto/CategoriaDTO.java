@@ -7,6 +7,8 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.alexsaraiva.cursomc.domain.Categoria;
+import com.alexsaraiva.cursomc.services.validation.ClienteUpdate;
+
 
 public class CategoriaDTO implements Serializable {
 			
