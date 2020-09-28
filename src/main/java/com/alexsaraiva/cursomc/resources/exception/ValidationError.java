@@ -5,6 +5,11 @@ import java.util.List;
 
 public class ValidationError extends StandardError {
 
+	public ValidationError(Long timestamp, Integer status, String error, String msg, String path) {
+		super(timestamp, status, error, msg, path);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final long serialVersionUID = 1L;
 	
 	private List<FieldMessage> list = new ArrayList<>();
