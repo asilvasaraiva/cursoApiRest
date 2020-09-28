@@ -9,11 +9,8 @@ public class ValidationError extends StandardError {
 	
 	private List<FieldMessage> list = new ArrayList<>();
 	
-	public ValidationError(Integer status, String msg, Long timeStamp) {
-		super(status, msg, timeStamp);
-		
-	}
 
+	
 	//O nome depois do get é vira o nome da lista
 	//ou seja, quando criar o objeto Lista o nome será Erros 
 	public List<FieldMessage> getErros(){
